@@ -35,7 +35,6 @@ public class QueryHandler {
         ResultSet resultSet = statement.executeQuery(query);
         SelectWriter writer = new SelectWriter();
         writer.write(resultSet);
-
     }
 
     private void handleNonSelect() throws SQLException {

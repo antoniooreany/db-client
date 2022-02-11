@@ -14,7 +14,10 @@ public class Starter {
     private static final String DB_USER = "user";
     private static final String DB_PASSWORD = "7777777";
 
-    // SELECT * FROM db.persons
+//  SELECT * FROM db.persons;
+//  INSERT INTO db.persons VALUES (3, 'value2', 'value3', 'value4', 'value5');
+//  UPDATE db.persons SET PersonID = 55 WHERE PersonID = 3;
+//  DELETE FROM db.persons WHERE PersonID = 55;
     public static void main(String[] args) throws SQLException, IOException {
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
              Statement statement = connection.createStatement();
