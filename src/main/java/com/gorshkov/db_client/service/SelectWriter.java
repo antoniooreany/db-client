@@ -1,40 +1,103 @@
 package com.gorshkov.db_client.service;
 
-import com.gorshkov.db_client.DBTablePrinter;
-import io.bretty.console.table.Alignment;
-import io.bretty.console.table.Table;
+import com.gorshkov.db_client.model.Row;
+import com.gorshkov.db_client.model.Table;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 
 public class SelectWriter {
+
+    private static int reportCount;
+
     public void write(ResultSet resultSet) throws SQLException, IOException {
-        writeToConsole(resultSet);
-        writeToHtmlFile(resultSet);
+        Table table = getTable(resultSet);
+
+        writeToConsole(table);
+        writeToHtmlFile(table);
     }
 
-    private void writeToConsole(ResultSet resultSet) throws SQLException {
-        //todo
-//        Object[][] data = getData(resultSet);
-//        Table table = Table.of(data, Alignment.LEFT, 10); // 10-character wide for each column
-//        System.out.println(table); // NOTICE: table.toString() is called implicitly
-        DBTablePrinter.printResultSet(resultSet);
+    private void writeToConsole(Table table) {
 
-    }
+        List<String> headers = table.getHeaders();
+        List<Row> rows = table.getRows();
 
-    private Object[][] getData(ResultSet resultSet) throws SQLException {
-        int columnCount = resultSet.getMetaData().getColumnCount();
-        int rowCount = getRowCount(resultSet);
-        Object[][] data = new Object[rowCount][columnCount];
-        for (int i = 0; i < rowCount; i++) {
-            resultSet.next();
-            for (int j = 0; j < columnCount; j++) {
-                data[j][i] = resultSet.getObject(j);
-            }
+        for (String header : headers) {
+            System.out.print(header + " | ");
         }
-        return data;
+        System.out.println();
+        for (Row row : rows) {
+            List<Object> values = row.getValues();
+            for (Object value : values) {
+                System.out.print(value + " | ");
+            }
+            System.out.println();
+        }
+    }
+
+    private void writeToHtmlFile(Table table) throws IOException {
+        File file = new File("./src/main/resources/report" + reportCount++ + ".html");
+        file.createNewFile();
+        BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+
+        writer.write("<table>\n");
+        writer.write("    <tr>\n");
+        List<String> columnNames = table.getHeaders();
+        for (String columnName : columnNames) {
+            writer.write("        <th>");
+            writer.write(columnName);
+            writer.write("</th>\n");
+        }
+
+        writer.write("    <tr>\n");
+
+        for (Row row : table.getRows()) {
+            for (Object value : row.getValues()) {
+                writer.write("        <td>");
+                writer.write(String.valueOf(value));
+                writer.write("</td>\n");
+            }
+            writer.write("    <tr>\n");
+        }
+        writer.write("</table>");
+        writer.flush();
+    }
+
+    private Table getTable(ResultSet resultSet) throws SQLException {
+        String[] columnNames = getColumnNames(resultSet);
+        Table table = new Table();
+
+        table.setHeaders(Arrays.asList(columnNames));
+
+        List<Row> rows = table.getRows();
+        while (resultSet.next()) {
+            Row row = new Row();
+            List<Object> values = row.getValues();
+            for (String columnName : columnNames) {
+                Object columnValue = resultSet.getObject(columnName);
+                values.add(columnValue);
+            }
+            rows.add(row);
+        }
+        return table;
+    }
+
+    private String[] getColumnNames(ResultSet resultSet) throws SQLException {
+        ResultSetMetaData metaData = resultSet.getMetaData();
+        int columnCount = metaData.getColumnCount();
+
+        String[] columnNames = new String[columnCount];
+        for (int i = 0; i < columnCount; i++) {
+            columnNames[i] = metaData.getColumnName(i + 1);
+        }
+        return columnNames;
     }
 
     public int getRowCount(ResultSet resultSet) throws SQLException {
@@ -48,39 +111,6 @@ public class SelectWriter {
         }
         return size;
     }
-
-    private void writeToHtmlFile(ResultSet resultSet) throws IOException, SQLException {
-        //todo
-        File file = new File("C:/Users/GAS_Dell_XPS9310/IdeaProjects/db-client/src/main/resources/report.html");
-        boolean newFile = file.createNewFile();
-        BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-
-        writer.write("<table>");
-        writer.write("  <tr>");
-        String[] columnNames = getColumnNames(resultSet);
-        int columnCount = resultSet.getMetaData().getColumnCount();
-        for (int i = 0; i < columnCount; i++) {
-            writer.write("    <th>");
-            writer.write(columnNames[i]);
-            writer.write("    </th>");
-        }
-        writer.write("  <tr>");
-        for (int i = 0; i < columnCount; i++) {
-            writer.write("    <td>");
-            writer.write(resultSet.getString(i + 1));
-            writer.write("    </td>");
-        }
-
-    }
-
-    private String[] getColumnNames(ResultSet resultSet) throws SQLException {
-        ResultSetMetaData metaData = resultSet.getMetaData();
-        int columnCount = metaData.getColumnCount();
-
-        String[] columnNames = new String[columnCount];
-        for (int i = 0; i < columnCount; i++) {
-            columnNames[i] = metaData.getColumnName(i + 1);
-        }
-        return columnNames;
-    }
 }
+
+

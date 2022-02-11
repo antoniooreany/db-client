@@ -27,7 +27,7 @@ public class QueryHandler {
                 handleNonSelect();
             }
         } catch (SQLException e) {
-            throw new IllegalQueryException("The query is illegal.");
+            throw new IllegalQueryException("The query is illegal.", e);
         }
     }
 
