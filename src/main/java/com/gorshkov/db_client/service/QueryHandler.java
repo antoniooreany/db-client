@@ -18,8 +18,8 @@ public class QueryHandler {
     }
 
     public void handle() throws IOException {
-        QueryTypeAnalizer queryTypeAnalizer = new QueryTypeAnalizer();
-        Command command = queryTypeAnalizer.analizeQueryType(query);
+        QueryTypeAnalyzer queryTypeAnalyzer = new QueryTypeAnalyzer();
+        Command command = queryTypeAnalyzer.analyzeQueryType(query);
         try {
             if (Command.SELECT.equals(command)) {
                 handleSelect();

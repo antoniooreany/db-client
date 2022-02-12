@@ -23,7 +23,7 @@ public class Starter {
              Statement statement = connection.createStatement();
              Scanner scanner = new Scanner(System.in)) {
             while (true) {
-                System.out.println("Enter your query: ");
+                System.out.println("Please enter your query: ");
                 String query;
                 while (!(query = scanner.nextLine()).isEmpty()) {
                     QueryHandler queryHandler = new QueryHandler(statement, query);
