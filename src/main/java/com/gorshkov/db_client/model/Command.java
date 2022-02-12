@@ -11,4 +11,18 @@ public enum Command {
     Command(String name) {
         this.name = name;
     }
+
+    public static Command getCommand(String name) {
+        if ("SELECT".equalsIgnoreCase(name)) {
+            return SELECT;
+        } else if ("INSERT".equalsIgnoreCase(name)) {
+            return INSERT;
+        } else if ("UPDATE".equalsIgnoreCase(name)) {
+            return UPDATE;
+        } else if ("DELETE".equalsIgnoreCase(name)) {
+            return DELETE;
+        } else throw new IllegalArgumentException("The name " + name + " of the command is not in the legal list");
+    }
+
+
 }

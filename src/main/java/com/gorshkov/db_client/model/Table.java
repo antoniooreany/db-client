@@ -4,22 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Table {
-    List<String> headers;
-    List<Row> rows = new ArrayList<>();
+    private List<String> headers = new ArrayList<>();
+    private List<Row> rows = new ArrayList<>();
 
     public List<String> getHeaders() {
         return headers;
     }
 
-    public void setHeaders(List<String> headers) {
-        this.headers = headers;
-    }
-
     public List<Row> getRows() {
         return rows;
-    }
-
-    public void setRows(List<Row> rows) {
-        this.rows = rows;
     }
 }

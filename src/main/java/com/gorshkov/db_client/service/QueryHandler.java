@@ -1,6 +1,5 @@
 package com.gorshkov.db_client.service;
 
-import com.gorshkov.db_client.exception.IllegalQueryException;
 import com.gorshkov.db_client.model.Command;
 
 import java.io.IOException;
@@ -9,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class QueryHandler {
+
     private final Statement statement;
     private final String query;
 
@@ -17,18 +17,12 @@ public class QueryHandler {
         this.query = query;
     }
 
-    public void handle() throws IOException {
-        QueryTypeAnalyzer queryTypeAnalyzer = new QueryTypeAnalyzer();
-        Command command = queryTypeAnalyzer.analyzeQueryType(query);
-        try {
-            if (Command.SELECT.equals(command)) {
-                handleSelect();
-            } else {
-                handleNonSelect();
-            }
-        } catch (SQLException e) {
-            throw new IllegalQueryException("The query is illegal.", e);
-        }
+    public void handle() throws SQLException, IOException {
+        String[] part = query.split(" ");
+        Command command = Command.getCommand(part[0]);
+        if (command.equals(Command.SELECT)) {
+            handleSelect();
+        } else handleNonSelect(); // todo put another: insert, update, delete
     }
 
     private void handleSelect() throws SQLException, IOException {
@@ -38,7 +32,8 @@ public class QueryHandler {
     }
 
     private void handleNonSelect() throws SQLException {
-        int rowsChanged = statement.executeUpdate(query);
-        new NonSelectWriter().write(rowsChanged);
+        int columnsUpdated = statement.executeUpdate(query);
+        System.out.println("Updated: " + columnsUpdated + " columns.");
+
     }
 }
