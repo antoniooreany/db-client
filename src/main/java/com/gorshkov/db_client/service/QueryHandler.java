@@ -20,9 +20,13 @@ public class QueryHandler {
     public void handle() throws SQLException, IOException {
         String[] part = query.split(" "); // todo: if the query starts from the " ": error.
         Command command = Command.getCommand(part[0]);
-        if (command.equals(Command.SELECT)) {
+        if (Command.SELECT.equals(command)) {
             handleSelect();
-        } else handleNonSelect(); // todo put another: insert, update, delete
+        } else if (Command.INSERT.equals(command)
+                || Command.UPDATE.equals(command)
+                || Command.DELETE.equals(command)) {
+            handleNonSelect();
+        }
     }
 
     private void handleSelect() throws SQLException, IOException {

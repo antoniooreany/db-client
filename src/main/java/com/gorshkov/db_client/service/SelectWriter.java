@@ -38,29 +38,28 @@ public class SelectWriter {
     }
 
     private void writeToHtmlFile(Table table) throws IOException {
-        List<String> headers = table.getHeaders();
-        List<Row> rows = table.getRows();
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("./src/main/resources/report.html"));) {
+            List<String> headers = table.getHeaders();
+            List<Row> rows = table.getRows();
 
-        BufferedWriter writer = new BufferedWriter(new FileWriter("./src/main/resources/report.html"));
-
-        StringBuilder builder = new StringBuilder("<table>\n");
-        builder.append("    <tr>\n");
-        for (String header : headers) {
-            builder.append("        <th>").append(header).append("</th>\n");
-        }
-        builder.append("    <tr>\n");
-
-        for (Row row : rows) {
-            for (int i = 0; i < headers.size(); i++) {
-                builder.append("        <td>").append(row.getValues().get(i)).append("</td>\n");
+            StringBuilder builder = new StringBuilder("<table>\n");
+            builder.append("    <tr>\n");
+            for (String header : headers) {
+                builder.append("        <th>").append(header).append("</th>\n");
             }
             builder.append("    <tr>\n");
+
+            for (Row row : rows) {
+                for (int i = 0; i < headers.size(); i++) {
+                    builder.append("        <td>").append(row.getValues().get(i)).append("</td>\n");
+                }
+                builder.append("    <tr>\n");
+            }
+
+            builder.append("</table>");
+            writer.write(builder.toString());
+            writer.flush();
         }
-
-        builder.append("</table>");
-        writer.write(builder.toString());
-        writer.flush();
-
     }
 
     private Table getTable(ResultSet resultSet) throws SQLException {

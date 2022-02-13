@@ -14,7 +14,7 @@ public class Starter {
 
 //    SELECT * FROM  db.persons;
 //    INSERT INTO db.persons VALUES (77, 'value0', 'value1', 'value2', 'value3');
-//    UPDATE db.persons SET PersonID = 55 WHERE PersonID = 3;
+//    UPDATE db.persons SET PersonID = 55 WHERE PersonID = 77;
 //    DELETE FROM db.persons WHERE PersonID = 55;
     public static void main(String[] args) throws SQLException, IOException {
         Statement statement = getStatement();
@@ -22,7 +22,8 @@ public class Starter {
         extracted(statement, scanner);
     }
 
-    private static void extracted(Statement statement, Scanner scanner) throws SQLException, IOException {
+    private static void extracted(Statement statement, Scanner scanner) // todo: how to name the method ?
+            throws SQLException, IOException {
         while (true) {
             System.out.println("Please enter your query");
             String query;
