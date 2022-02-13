@@ -18,7 +18,7 @@ public class QueryHandler {
     }
 
     public void handle() throws SQLException, IOException {
-        String[] part = query.split(" ");
+        String[] part = query.split(" "); // todo: if the query starts from the " ": error.
         Command command = Command.getCommand(part[0]);
         if (command.equals(Command.SELECT)) {
             handleSelect();

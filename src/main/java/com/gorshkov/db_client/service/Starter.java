@@ -17,15 +17,12 @@ public class Starter {
 //    UPDATE db.persons SET PersonID = 55 WHERE PersonID = 3;
 //    DELETE FROM db.persons WHERE PersonID = 55;
     public static void main(String[] args) throws SQLException, IOException {
-        Statement statement;
-        try {
-            Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-            statement = connection.createStatement();
-        } catch (SQLException e) {
-            throw new RuntimeException("Connection to the DB cannot be established with the current credentials", e);
-        }
+        Statement statement = getStatement();
         Scanner scanner = new Scanner(System.in);
+        extracted(statement, scanner);
+    }
 
+    private static void extracted(Statement statement, Scanner scanner) throws SQLException, IOException {
         while (true) {
             System.out.println("Please enter your query");
             String query;
@@ -34,7 +31,16 @@ public class Starter {
                 handler.handle();
             }
         }
+    }
 
-
+    private static Statement getStatement() {
+        Statement statement;
+        try {
+            Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            statement = connection.createStatement();
+        } catch (SQLException e) {
+            throw new RuntimeException("Connection to the DB cannot be established with the current credentials", e);
+        }
+        return statement;
     }
 }
