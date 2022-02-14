@@ -37,7 +37,7 @@ public class QueryHandler {
 
     private void handleNonSelect() throws SQLException {
         int columnsUpdated = statement.executeUpdate(query);
-        System.out.println("Updated: " + columnsUpdated + " columns.");
-
+        NonSelectWriter writer = new NonSelectWriter();
+        writer.write(columnsUpdated);
     }
 }
