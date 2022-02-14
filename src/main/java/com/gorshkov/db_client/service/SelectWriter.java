@@ -72,7 +72,6 @@ public class SelectWriter {
             columns.add(resultSet.getMetaData().getColumnName(i + 1));
         }
 
-
         while (resultSet.next()) {
             Row row = new Row();
             List<Object> values = row.getValues();
