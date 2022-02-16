@@ -1,5 +1,7 @@
 package com.gorshkov.db_client.model;
 
+import java.util.Arrays;
+
 public enum Command {
     SELECT("SELECT"),
     INSERT("INSERT"),
@@ -13,15 +15,10 @@ public enum Command {
     }
 
     public static Command getCommand(String name) {
-        if ("SELECT".equalsIgnoreCase(name)) {
-            return SELECT;
-        } else if ("INSERT".equalsIgnoreCase(name)) {
-            return INSERT;
-        } else if ("UPDATE".equalsIgnoreCase(name)) {
-            return UPDATE;
-        } else if ("DELETE".equalsIgnoreCase(name)) {
-            return DELETE;
-        } else throw new IllegalArgumentException("The name " + name + " of the command is not in the legal list");
+        return Arrays.stream(values())
+                .filter(value -> value.name.equalsIgnoreCase(name))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("The name " + name + " of the command is not in the legal list"));
     }
 
 
